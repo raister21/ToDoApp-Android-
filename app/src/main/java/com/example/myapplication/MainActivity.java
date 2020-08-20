@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> todos = new ArrayList<>();
     String input;
 
-    String[] todo = {"goo", "Khhaa"};
     RecyclerView recyclerView;
 
 
@@ -29,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
         Button btn = (Button) findViewById(R.id.button);
         final EditText eTxt = (EditText) findViewById(R.id.editText);
 
-        todos.add("khelp");
-
         final MyAdapter myAdapter = new MyAdapter(this,todos);
         recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -42,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
                 todos.add(input);
                 myAdapter.notifyItemChanged(todos.size());
                 System.out.println(todos.size());
+
             }
         });
-
 
     }
 }

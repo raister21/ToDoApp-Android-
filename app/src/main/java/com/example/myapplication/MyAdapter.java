@@ -1,10 +1,14 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +19,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
     private ArrayList<String> data;
+    private String edited;
 
 
     public MyAdapter(Context ct, ArrayList<String> dat) {
@@ -31,8 +36,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyAdapter.MyViewHolder holder, final int position) {
         holder.txt.setText(data.get(position));
+        holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                data.remove(position);
+                notifyItemRemoved(position);
+            }
+        });
+
+
+        holder.editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edit_dialog(view, position);
+                holder.txt.setText(data.get(position));
+                notifyItemChanged(position);
+            }
+        });
+
     }
 
     @Override
@@ -43,13 +66,48 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView txt;
+        Button cancelBtn, editBtn;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
 
             txt = itemView.findViewById(R.id.textRow);
-
+            cancelBtn = itemView.findViewById(R.id.deleteBtn);
+            editBtn = itemView.findViewById(R.id.editBtn);
 
         }
     }
+
+    public void edit_dialog(View view,final int focus) {
+
+        final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        LayoutInflater dialogInflator = LayoutInflater.from(context);
+        View view1 = dialogInflator.inflate(R.layout.edit_layout, null);
+
+        final EditText editText = (EditText) view1.findViewById(R.id.editToDo);
+        Button confirmEditBtn = (Button) view1.findViewById(R.id.confirmEdit);
+
+        alert.setView(view1);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+
+        confirmEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edited = editText.getText().toString();
+                data.set(focus, edited);
+                notifyItemChanged(focus);
+                alertDialog.dismiss();
+
+            }
+        });
+
+        alertDialog.show();
+
+
+
+    }
+
+
 }
