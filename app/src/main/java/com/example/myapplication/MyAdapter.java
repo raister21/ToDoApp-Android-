@@ -20,6 +20,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<String> data;
     private String edited;
+    private boolean updated;
+
+    DatabaseHelper mydb;
 
 
     public MyAdapter(Context ct, ArrayList<String> dat) {
@@ -37,7 +40,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final MyAdapter.MyViewHolder holder, final int position) {
+        //set
         holder.txt.setText(data.get(position));
+
+        //delete
         holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,13 +52,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-
+        //edit
         holder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 edit_dialog(view, position);
                 holder.txt.setText(data.get(position));
-                notifyItemChanged(position);
+                String posi = holder.txt.getText().toString();
+                String id = null;
+                id = Integer.toString((position + 1));
+
+
             }
         });
 
@@ -80,6 +90,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public void edit_dialog(View view,final int focus) {
 
+        final String id = Integer.toString(focus + 1);
         final AlertDialog.Builder alert = new AlertDialog.Builder(context);
         LayoutInflater dialogInflator = LayoutInflater.from(context);
         View view1 = dialogInflator.inflate(R.layout.edit_layout, null);
@@ -97,6 +108,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             public void onClick(View view) {
                 edited = editText.getText().toString();
                 data.set(focus, edited);
+
                 notifyItemChanged(focus);
                 alertDialog.dismiss();
 
