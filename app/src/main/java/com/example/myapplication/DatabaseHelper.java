@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+    private Context context;
     public static final String DATABASE_NAME = "Todo.db";
     public static final String TABLE_NAME = "Todo_table";
     public static final String COL_1 = "ID";
@@ -16,6 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
+        this.context = context;
 
     }
 
@@ -31,12 +33,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean updateData(String id, String ntodo) {
+    public boolean updateData(String row_id, String ntodo) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_1, id);
         contentValues.put(COL_2, ntodo);
-        long result = sqLiteDatabase.update(TABLE_NAME, contentValues, "ID = ?", new String[] { id });
+        long result = sqLiteDatabase.update(TABLE_NAME, contentValues, "ID = ?", new String[] { row_id });
 
         if (result == -1)
             return false;

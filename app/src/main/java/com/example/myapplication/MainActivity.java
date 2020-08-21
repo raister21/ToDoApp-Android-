@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
                 //Insert into db
                 Boolean isInserted = mydb.insertData(input);
-                mydb.close();
 
                 if (isInserted == true) {
                     System.out.println("Inserted");

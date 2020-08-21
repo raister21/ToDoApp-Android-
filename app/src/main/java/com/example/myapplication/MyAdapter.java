@@ -22,12 +22,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private String edited;
     private boolean updated;
 
-    DatabaseHelper mydb;
+
 
 
     public MyAdapter(Context ct, ArrayList<String> dat) {
         context = ct;
         data = dat;
+
     }
 
     @NonNull
@@ -56,13 +57,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 edit_dialog(view, position);
-                holder.txt.setText(data.get(position));
-                String posi = holder.txt.getText().toString();
-                String id = null;
-                id = Integer.toString((position + 1));
+                //holder.txt.setText(data.get(position));
 
-
+                //notifyItemChanged(position);
             }
         });
 
@@ -88,7 +87,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    public void edit_dialog(View view,final int focus) {
+    public void edit_dialog(View view, final int focus) {
 
         final String id = Integer.toString(focus + 1);
         final AlertDialog.Builder alert = new AlertDialog.Builder(context);
@@ -108,6 +107,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             public void onClick(View view) {
                 edited = editText.getText().toString();
                 data.set(focus, edited);
+
+                DatabaseHelper mydb = new DatabaseHelper(context);
+                updated = mydb.updateData(id, edited);
+
+                if (updated == true ) {
+                    System.out.println("Updated");
+                } else {
+                    System.out.println("Not updated");
+                }
 
                 notifyItemChanged(focus);
                 alertDialog.dismiss();
