@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, TODO VARCHAR(40))");
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY, TODO VARCHAR(40))");
 
     }
 
@@ -33,11 +33,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean updateData(String row_id, String ntodo) {
+    public boolean updateData(String id, String ntodo) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_1, id);
         contentValues.put(COL_2, ntodo);
-        long result = sqLiteDatabase.update(TABLE_NAME, contentValues, "ID = ?", new String[] { row_id });
+        long result = sqLiteDatabase.update(TABLE_NAME, contentValues, "ID = ?", new String[] { id });
 
         if (result == -1)
             return false;
@@ -45,9 +46,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean insertData(String ntodo) {
+    public boolean insertData(String id, String ntodo) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_1, id);
         contentValues.put(COL_2, ntodo);
         long result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
 
@@ -57,10 +59,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
+    public boolean deleteData(String row_id){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long result = sqLiteDatabase.delete(TABLE_NAME, "ID = ?", new String[] { row_id });
+
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
     public Cursor getAllData(){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor res = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
         return res;
     }
+
+
 }

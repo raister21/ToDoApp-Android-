@@ -48,9 +48,10 @@ public class MainActivity extends AppCompatActivity {
                 input = eTxt.getText().toString();
                 todos.add(input);
                 myAdapter.notifyItemChanged(todos.size());
+                String row = Integer.toString(todos.size());
 
                 //Insert into db
-                Boolean isInserted = mydb.insertData(input);
+                Boolean isInserted = mydb.insertData(row,input);
 
                 if (isInserted == true) {
                     System.out.println("Inserted");

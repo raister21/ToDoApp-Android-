@@ -20,15 +20,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<String> data;
     private String edited;
-    private boolean updated;
-
-
+    private boolean updated, deleted;
 
 
     public MyAdapter(Context ct, ArrayList<String> dat) {
         context = ct;
         data = dat;
-
     }
 
     @NonNull
@@ -48,8 +45,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                data.remove(position);
-                notifyItemRemoved(position);
+
+                String id = Integer.toString(position + 1);
+                DatabaseHelper mydb = new DatabaseHelper(context);
+                deleted = mydb.deleteData(id);
+                if (deleted == true) {
+                    System.out.println("Deleted");
+                    data.remove(position);
+                    notifyItemRemoved(position);
+                } else {
+                    System.out.println("Not deleted");
+                }
+
             }
         });
 
@@ -57,11 +64,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 edit_dialog(view, position);
-                //holder.txt.setText(data.get(position));
-
-                //notifyItemChanged(position);
             }
         });
 
